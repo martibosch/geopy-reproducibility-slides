@@ -1,49 +1,326 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Martí Bosch">
+  <title>Reproducibility in Geospatial Data Science</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href=".//css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href=".//css/theme/black.css" id="theme">
+  <link rel="stylesheet" href="css/custom.css"/>
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? './/css/print/pdf.css' : './/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src=".//lib/js/html5shiv.js"></script>
+  <![endif]-->
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
 
-		<title>reveal.js</title>
+<section>
+  <h1 class="title">Reproducibility in Geospatial Data Science</h1>
+  <p class="author">Martí Bosch</p>
+  <p class="date">February 4, 2019</p>
+</section>
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+<section><section id="reproducibility" class="titleslide slide level1"><h1>Reproducibility</h1></section><section id="idea" class="slide level2">
+<h2>Idea</h2>
+<p>👨 publishes a paper with the results <em><strong>Y</strong></em> of a applying the model <em><strong>f</strong></em> to the datasets <em><strong>X</strong></em></p>
+</section><section id="what-will-be-in-the-paper" class="slide level2">
+<h2>What will be in the paper?</h2>
+<ul>
+<li class="fragment"><em>Most likely</em>: results <em><strong>Y</strong></em> (tables, figures)</li>
+<li class="fragment"><em>Maybe</em>: model <em><strong>f</strong></em> (code)</li>
+<li class="fragment"><em>Unlikely</em>: access to the datasets <em><strong>X</strong></em></li>
+</ul>
+</section><section id="reproducibility-quest" class="slide level2">
+<h2>Reproducibility quest</h2>
+<p>Imagine a paper with results <em><strong>Y</strong></em> and sharing the model's code <em><strong>f</strong></em></p>
+<div class="fragment">
+<p>🙋 has access to the dataset <em><strong>X</strong></em>. Will 🙋 be able to reproduce the results <em><strong>Y</strong></em>?</p>
+</div>
+</section></section>
+<section><section id="two-main-reproducibility-issues" class="titleslide slide level1"><h1>Two main reproducibility issues</h1></section><section id="computational-environments" class="slide level2">
+<h2>Computational environments</h2>
+<ul>
+<li class="fragment">👨 has a 💻 with e.g. Ubuntu 18.04, GDAL 2.2.2, Python 2.7 and NumPy 1.15.1</li>
+<li class="fragment">🙋 has a 💻 with e.g. Windows 10, GDAL 2.2.4, Python 3.6 and NumPy 1.13.0</li>
+</ul>
+</section><section id="computational-environments-1" class="slide level2">
+<h2>Computational environments</h2>
+<p>The results <em><strong>Y</strong></em> of running code <em><strong>f</strong></em> on dataset <em><strong>X</strong></em> might depend on the OS, system libraries, Python version and libraries...</p>
+<div class="fragment">
+<p>These change really fast, so chances that 👨 and 🙋 obtain the same results <em><strong>Y</strong></em> can be quite low</p>
+</div>
+</section><section id="yet-there-is-a-trickier-issue" class="slide level2">
+<h2>Yet there is a trickier issue</h2>
+</section><section id="mutated-data" class="slide level2">
+<h2>Mutated data</h2>
+<p>Say 🙋 has access to the same <em>environment</em> as 👨</p>
+<div class="fragment">
+<p>Furthermore, say 🙋 has access to the dataset <em><strong>X</strong></em>, that is a file named <code>g100_clc12_V18_5.tif</code></p>
+</div>
+<div class="fragment">
+<p>Yet the code shared by 👨 might look like</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="cf">with</span> rasterio.<span class="bu">open</span>(
+    <span class="st">&quot;~/my-data/clc_2012_cropped_reclassified.tif&quot;</span>) <span class="im">as</span> src:
+    clc_arr <span class="op">=</span> src.read(<span class="dv">1</span>)</code></pre></div>
+</div>
+</section><section id="section" class="slide level2">
+<h2></h2>
+<p>Then 🙋 contacts 👨 by email:</p>
+<div class="fragment">
+<ul>
+<li class="fragment">🙋 How did you obtain <code>clc_2012_cropped_reclassified.tif</code>?</li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li class="fragment">👨 Oh, I manually cropped and reclassified the <code>tif</code> with QGIS some months ago, I don't remember exactly how</li>
+</ul>
+</div>
+</section><section id="and-so-on" class="slide level2">
+<h2>And so on</h2>
+</section><section id="reality" class="slide level2">
+<h2>Reality</h2>
+<p>Chances that 👨 and 🙋 obtain the same results <em><strong>Y</strong></em> are very low</p>
+</section></section>
+<section><section id="reproducibility-within-the-pydata-stack" class="titleslide slide level1"><h1>Reproducibility within the PyData stack</h1></section><section id="two-kinds-of-code-repositories" class="slide level2">
+<h2>Two kinds of code repositories</h2>
+</section><section id="libraries" class="slide level2">
+<h2>Libraries</h2>
+<ul>
+<li class="fragment"><strong>For</strong>: general purpose tasks</li>
+<li class="fragment"><strong>Consist of</strong>: Python modules</li>
+<li class="fragment">Packaged (instable by pip, conda...)</li>
+<li class="fragment">Examples: NumPy, pandas, matplotlib...</li>
+</ul>
+</section><section id="analysis-cases" class="slide level2">
+<h2>Analysis cases</h2>
+<ul>
+<li class="fragment"><strong>For</strong>: specific case studies</li>
+<li class="fragment"><strong>Consist of</strong>: scripts and notebooks to preprocess and explore the data</li>
+<li class="fragment">Make extensive use of libraries</li>
+<li class="fragment">Example: rainfall-runoff simulation of the Broye watershed</li>
+</ul>
+</section><section id="section-1" class="slide level2">
+<h2></h2>
+<p>The focus of this workshop is on creating reproducible <strong>analysis case repositories</strong></p>
+</section></section>
+<section><section id="reproducibility-of-analysis-case-repositories" class="titleslide slide level1"><h1>Reproducibility of analysis case repositories</h1></section><section id="section-2" class="slide level2">
+<h2></h2>
+<p>Say that 👨 includes a git repository for his analysis case, with all the scripts needed to preprocess the raw data</p>
+<div class="fragment">
+<p>How do we ensure that 🙋 can reproduce the results in her 💻 ?</p>
+</div>
+</section><section id="virtual-environments-in-python" class="slide level2">
+<h2>Virtual environments in Python</h2>
+<p>Consist of:</p>
+<ul>
+<li class="fragment">Python interpreter, e.g., Python 2.7 or Python 3.6 ...</li>
+<li class="fragment">Set of Python packages with <em>pinned</em> versions e.g.</li>
+</ul>
+<pre><code>numpy==1.13.3
+pandas==0.23.4
+matplotlib==3.0.2
+...</code></pre>
+<div class="fragment">
+<p>They are <em>virtual</em> because they are isolated from the OS libraries<span class="math inline">\(\dagger\)</span></p>
+</div>
+</section><section id="managing-python-virtual-environments" class="slide level2">
+<h2>Managing Python virtual environments</h2>
+<p>Two main approaches</p>
+</section><section id="pip-virtualenv" class="slide level2">
+<h2>pip + virtualenv</h2>
+<ul>
+<li class="fragment">virtualenv allows creating virtual Python environments that work with pip</li>
+<li class="fragment">pip is the package manager supported by the Python foundation</li>
+<li class="fragment">Environments can be shared with a <code>requirements.txt</code> file</li>
+</ul>
+</section><section id="however" class="slide level2">
+<h2>However</h2>
+<ul>
+<li class="fragment">pip only supports managing Python packages</li>
+</ul>
+<p><span class="math inline">\(\dagger\)</span> Python packages can often depend on non-Python libraries</p>
+<div class="fragment">
+<p>🙋 might still not be able to reproduce the results since she has GDAL 2.2.4 and 👨 has GDAL 2.2.2</p>
+</div>
+</section><section id="enter-the-second-approach" class="slide level2">
+<h2>Enter the second approach</h2>
+</section><section id="conda" class="slide level2">
+<h2>conda</h2>
+<ul>
+<li class="fragment">Packaged with the Anaconda Python distribution</li>
+<li class="fragment">Compatible with pip and virtualenv<a href="http://jakevdp.github.io/blog/2016/08/25/conda-myths-and-misconceptions/#Myth-#5:-conda-doesn&#39;t-work-with-virtualenv,-so-it&#39;s-useless-for-my-workflow"><span class="math inline">\(\ddagger\)</span></a></li>
+<li class="fragment">Handles library dependencies even outside Python, e.g., GDAL</li>
+<li class="fragment">Environments can be shared with an <code>environment.yml</code> file</li>
+</ul>
+<div class="fragment">
+<p>If 👨 shares his <code>environment.yml</code>, 🙋 should be able to fully reproduce the results</p>
+</div>
+</section><section id="yet-we-still-have-the-trickier-issue-of-mutated-data" class="slide level2">
+<h2>Yet, we still have the trickier issue of mutated data</h2>
+<p>There is no magic solution for it... Just organization</p>
+</section><section id="example-repository-structure" class="slide level2 large-code-block">
+<h2>Example repository structure</h2>
+<p><a href="https://drivendata.github.io/cookiecutter-data-science/#cookiecutter-data-science">Cookiecutter Data Science</a></p>
+<pre><code>├── notebooks          &lt;- Jupyter notebooks
+├── reports            &lt;- Generated analysis as HTML, PDF, LaTeX, etc.
+│   └── figures        &lt;- Generated graphics and figures to be used in reporting
+│
+├── data
+│   ├── interim        &lt;- Intermediate data that has been transformed.
+│   ├── processed      &lt;- The final, canonical data sets for modeling.
+│   └── raw            &lt;- The original, immutable data dump.
+│
+├── models             &lt;- Trained and serialized models, model predictions, or model summaries
+│
+├── src                &lt;- Source code for use in this project.
+│   ├── __init__.py    &lt;- Makes src a Python module
+│   ├── data           &lt;- Scripts to download or generate data
+│   │   └── make_dataset.py
+│   ├── features       &lt;- Scripts to turn raw data into features for modeling
+│   ├── models         &lt;- Scripts to train models and then use them to make predictions
+│   │   ├── predict_model.py
+│   │   └── train_model.py
+│
+├── Makefile           &lt;- Makefile with commands like `make data` or `make train`
+├── requirements.txt   &lt;- The requirements file for reproducing the analysis environment
+├── setup.py           &lt;- makes project pip installable (pip install -e .) so src can be imported
+└── tox.ini            &lt;- tox file with settings for running tox; see tox.testrun.org</code></pre>
+<p>(I have ommited some details so the tree can fit)</p>
+</section><section id="key-principles" class="slide level2">
+<h2>Key principles</h2>
+<p>Although most templates are designed for Machine Learning analysis cases, the key principles are also relevant for Geospatial data science</p>
+</section><section id="provide-a-reproducible-computational-environment" class="slide level2">
+<h2>Provide a reproducible computational environment</h2>
+<ul>
+<li class="fragment"><p>Many geo-Python packages depend on GDAL, so it is strongly recommended to use conda</p></li>
+<li class="fragment"><p>Tools like <a href="https://mybinder.org/">Binder</a> can automatically build an executable environments (Docker images) for a repository with an <code>environment.yml</code>, so anybody can execute the repository's notebooks</p></li>
+</ul>
+</section><section id="raw-data-is-immutable" class="slide level2">
+<h2>Raw data is immutable</h2>
+<ul>
+<li class="fragment"><p>Do not overwrite raw data - especially not manually</p></li>
+<li class="fragment"><p>Any processed data should be stored in separate files (preferably separate folders too)</p></li>
+</ul>
+</section><section id="analysis-as-a-dag" class="slide level2">
+<h2>Analysis as a DAG</h2>
+<p>An analysis case can be modeled as a directed-acyclic graph (DAG), with two kinds of nodes:</p>
+<ul>
+<li class="fragment"><p>Dataset states</p></li>
+<li class="fragment"><p>Data processing steps</p></li>
+</ul>
+<p>and edges link dataset states as inputs/outputs of data processing steps</p>
+</section><section id="example-for-machine-learning" class="slide level2">
+<h2>Example for Machine Learning</h2>
+<figure>
+<img src="images/machine-learning-dag.png" alt="Machine Learning DAG" /><figcaption>Machine Learning DAG</figcaption>
+</figure>
+</section><section id="automate-your-computational-workflow" class="slide level2">
+<h2>Automate your computational workflow</h2>
+<p>In order to avoid the <code>clc_2012_cropped_reclassified.tif</code> issue above, you might use make (or more advanced tools like snakemake, airflow...)</p>
+</section><section id="example-for-machine-learning-1" class="slide level2 large-code-block">
+<h2>Example for Machine Learning</h2>
+<pre><code>RAW_DATASET_FP = data/raw/immutable_dataset.csv
+FEATURE_DATASET_FP = data/processed/feature_dataset.csv
+TRAIN_DATASET_FP = data/processed/train_dataset.csv
+TEST_DATASET_FP = data/processed/test_dataset.csv
+TRAINED_MODEL_FP = models/trained_model.csv
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+extract_features:
+    python src/features/extract_features.py -i $(RAW_DATASET_FP) -o $(FEATURE_DATASET_FP)
+    
+split_dataset: extract_features
+    python src/data/split_dataset.py -input $(FEATURE_DATASET_FP) -o $(TRAIN_DATASET_FP) \
+        -o $(TEST_DATASET_FP)
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+train_model: split_dataset
+    python src/models/train_model.py -i $(TRAIN_DATASET_FP) -o $(TRAINED_MODEL_FP)
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
+validate_model: train_model
+    python src/models/validate_model.py -i $(TEST_DATASET_FP) -o $(VALIDATED_MODEL_FP)
+</code></pre>
+</section><section id="now-lets-apply-this-to-geospatial-data-science" class="slide level2">
+<h2>Now let's apply this to Geospatial Data Science</h2>
+</section></section>
+<section><section id="example-for-geospatial-data-science-rainfall-runoff-simulation" class="titleslide slide level1"><h1>Example for Geospatial Data Science: Rainfall-runoff simulation</h1></section><section id="analysis-dag" class="slide level2">
+<h2>Analysis DAG</h2>
+<figure>
+<img src="images/rainfall-runoff-dag.png" alt="Rainfall-runoff DAG" /><figcaption>Rainfall-runoff DAG</figcaption>
+</figure>
+</section><section id="lets-get-to-it" class="slide level2">
+<h2>Let's get to it!</h2>
+</section></section>
+    </div>
+  </div>
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
-			});
-		</script>
-	</body>
+  <script src=".//lib/js/head.min.js"></script>
+  <script src=".//js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: './/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: './/plugin/zoom-js/zoom.js', async: true },
+              { src: './/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
 </html>

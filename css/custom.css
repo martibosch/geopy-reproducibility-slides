@@ -1,0 +1,11 @@
+.reveal h1 {
+    font-size: 2em
+}
+
+.reveal em strong {
+    color: orange
+}
+
+.large-code-block pre {
+    font-size: .33em
+}
